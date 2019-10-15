@@ -1,14 +1,13 @@
-#n = int(input('Enter an integer: '))
 import sys
 
-n = int(sys.argv[1])	#Commannd Line Arg
+n = int(sys.argv[1])	#Command Line Arg
 flag = False
 if n == 1:
 	print('Root: 1')
 else:
 	low = 1
 	high = n
-	while high != low:
+	while high != low + 1:
 		mid = (high + low) // 2
 		if mid*mid == n:
 			flag = 1
@@ -20,5 +19,4 @@ else:
 	if flag == 1:
 		print('Root:', mid)
 	else:
-		print('Not a perfect square') #Goes into infinite loop
-			
+		print('Not a perfect square, root between', low, 'and', high)
