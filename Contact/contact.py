@@ -1,8 +1,9 @@
-import datetime
+from datetime import datetime
 contacts = {}
-
+log = []
 def addContact():
 	global contacts
+	global log
 	new_name = input("Name:")
 	new_pNo = int(input("Primary Number:"))
 	s_opt = input("Add Secondary Number?(y/n)")
@@ -14,10 +15,13 @@ def addContact():
 	new_contact['pNo'] = new_pNo
 	new_contact['sNo'] = new_sNo
 	contacts[new_name] = new_contact
+	log += [[datetime.now().isoformat(), "Added contact: Name:{}|Primary Number:{}|Secondary Number:{}".format(new_contact['name'], new_contact['pNo'], new_contact['sNo'])]]
+	return contacts[new_name]
 
-def search():
-	global contacts
+def search(): # Improve searching
+	global contacts, log
 	key = input("Search:")
+	log += [[datetime.now().isoformat(), "Query key:{}".format(key)]]
 	item = dict()
 	for name in contacts.keys():
 		if key in name:
@@ -41,7 +45,9 @@ while True:
 		item = search()
 		if item == dict():
 			print("No such contact found")
+			log += [[datetime.now().isoformat(), "Query result: Not found"]]
 		else:
+			log += [[datetime.now().isoformat(), "Query result: Name:{}|Primary Number:{}|Secondary Number:{}".format(item['name'], item['pNo'], item['sNo'])]]
 			print("Contact found:")
 			printContact(item)
 			print()
@@ -50,16 +56,20 @@ while True:
 		item = search()
 		if item == dict():
 			print("No such contact found")
+			log += [[datetime.now().isoformat(), "Query result: Not found"]]
 		else:
+			log += [[datetime.now().isoformat(), "Query result: Name:{}|Primary Number:{}|Secondary Number:{}".format(item['name'], item['pNo'], item['sNo'])]]
 			print("Contact found:")
 			printContact(item)
 			del contacts[item['name']]
+			log += [[datetime.now().isoformat(), "Deleted contact: Name:{}|Primary Number:{}|Secondary Number:{}".format(item['name'], item['pNo'], item['sNo'])]]
 			addContact()
 			print("Contact updated\n")
 
 	elif opt == 4:	# Delete a contact after searching for it
 		item = search()
 		if item == dict():
+			log += [[datetime.now().isoformat(), "Query result (deletion): Not found"]]
 			print("No such contact found")
 		else:
 			print("Contact found:")
@@ -68,6 +78,7 @@ while True:
 			if opt3 == 'y':
 				del contacts[item['name']]
 				print("Contact deleted\n")
+				log += [[datetime.now().isoformat(), "Deleted contact: Name:{}|Primary Number:{}|Secondary Number:{}".format(item['name'], item['pNo'], item['sNo'])]]
 
 	elif opt == 5:	# Display all contacts
 		print("Total contacts:", len(contacts))
@@ -77,8 +88,11 @@ while True:
 			printContact(contacts[contactKey])
 			print("----------")
 			j += 1
+		log += [[datetime.now().isoformat(), "Printed all contacts"]]
 		print()
 
 	elif opt == 6:	# End application
 		print("Contact application terminated")
-		break
+		for i in log:
+			print("{:30}{}".format(i[0], i[1]))	
+		break	
